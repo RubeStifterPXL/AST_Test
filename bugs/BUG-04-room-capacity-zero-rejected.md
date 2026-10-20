@@ -1,10 +1,10 @@
-# BUG-05 – Locatie aanmaken met roomCapacity 0 wordt geweigerd, terwijl de specificatie 0 toelaat
+# BUG-04 – Locatie aanmaken met roomCapacity 0 wordt geweigerd, terwijl de specificatie 0 toelaat
 
-> **Bevestigd** met eigen Postman-run op 20/10/2026 (08:47): TC05.02 faalt met `Status is 201: expected response to have status code 201 but got 400`.
+> **Bevestigd** met eigen Postman-run op 20/10/2026 (08:47) en met GitHub Actions run #1: TC05.02 faalt met `Status is 201: expected response to have status code 201 but got 400`.
 
 | Veld | Waarde |
 |---|---|
-| ID | BUG-05 |
+| ID | BUG-04 |
 | Ernst / prioriteit | Minor / Midden |
 | User story | US-23 – Locatie aanmaken |
 | Endpoint | `POST /api/admin/locations` |
