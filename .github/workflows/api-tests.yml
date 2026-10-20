@@ -1,0 +1,62 @@
+name: API tests (Postman / Newman)
+
+# Alleen manueel te starten: tab Actions > "API tests (Postman / Newman)" > Run workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  newman:
+    name: Run QAcademy API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Newman and reporters
+        run: npm ci
+
+      # Een rode stap omdat een test een bug vindt is normaal en gewenst.
+      - name: Run Postman collection
+        run: >
+          npx newman run postman/qacademy-team2.postman_collection.json
+          --environment postman/qacademy-team2.postman_environment.json
+          --reporters cli,htmlextra,junit,json
+          --reporter-htmlextra-export reports/report.html
+          --reporter-htmlextra-title "QAcademy team 2 - API tests"
+          --reporter-junit-export reports/junit.xml
+          --reporter-json-export reports/newman.json
+          --timeout-request 30000
+          --color on
+
+      - name: Write job summary
+        if: always()
+        run: |
+          node -e '
+            const fs = require("fs");
+            if (!fs.existsSync("reports/newman.json")) { console.log("No Newman report found"); process.exit(0); }
+            const run = require("./reports/newman.json").run;
+            const a = run.stats.assertions, r = run.stats.requests;
+            let md = "## QAcademy API tests\n\n| Requests | Assertions | Failed assertions |\n|---|---|---|\n";
+            md += `| ${r.total} | ${a.total} | ${a.failed} |\n\n`;
+            if (run.failures.length) {
+              md += "### Failed assertions\n\n| Request | Assertion |\n|---|---|\n";
+              run.failures.forEach(f => md += `| ${f.source.name} | ${(f.error.test || f.error.message).replace(/\|/g, "\\|")} |\n`);
+            }
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
+          '
+
+      - name: Publish test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report-${{ github.run_number }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 30
