@@ -8,7 +8,7 @@
 | Type | Niet-functioneel (performance) |
 | Ernst / prioriteit | Major / Midden |
 | User story | US-07 – Checkout |
-| Endpoint | `POST /api/payments/{subscriptionId}/checkout` (method `EXTERNAL`) |
+| Endpoint | `POST {{base_url}}/api/subscriptions` (method `EXTERNAL`) |
 | Omgeving | Team 2 – `https://qacademyb.duckdns.org` |
 | Gevonden door | TC17.01 (collectie in deze repo), run 20/10/2026 |
 | Status | Open |
