@@ -46,4 +46,4 @@ In de collectie automatiseert request `TC17.01 Checkout 5x meten (drempel en spr
 Studenten wachten tot ~2 s op de bevestiging van hun betaling. Bij gelijktijdig gebruik kan dat tot time-outs of dubbele klikken, en dus dubbele betaalpogingen, leiden.
 
 ## Opmerking over reproduceerbaarheid
-Het aantal falende asserties in TC17.01 verschilt per run (19 tot 22 falende tests in totaal) omdat de responstijd wisselt. Dat is zelf de bevinding: de checkout is niet voorspelbaar snel.
+Het aantal falende asserties in TC17.01 verschilt per run (16 tot 22 falende tests in totaal) omdat de responstijd wisselt. Dat is zelf de bevinding: de checkout is niet voorspelbaar snel.
