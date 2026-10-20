@@ -43,7 +43,7 @@
 - BUG-01: de publieke catalogus toont DRAFT- en CANCELLED-cursussen.
 - BUG-02: de wachtlijst promoveert de jongste inschrijving in plaats van de oudste.
 - BUG-03: een `PUT` cursus met onbekende `locationId` geeft 404 in plaats van 400.
-- BUG-05: `POST /api/admin/locations` met `roomCapacity: 0` geeft 400 ("roomCapacity must be greater than 0"), terwijl de Swagger min 0 toelaat. Veroorzaakt 5 gevolgfouten in TC05.
+- BUG-04: `POST /api/admin/locations` met `roomCapacity: 0` geeft 400 ("roomCapacity must be greater than 0"), terwijl de Swagger min 0 toelaat. Veroorzaakt 5 gevolgfouten in TC05.
 - PERF-01: de checkout duurt 170–1930 ms; de andere endpoints zitten rond 100 ms. Eigen run: 917–1626 ms, wisselvallig.
 - BUG-04 (locatie in gebruik toch verwijderbaar) was géén SUT-bug: een fout in onze setup (loc_ref te vroeg uitgelezen), verholpen. De SUT geeft correct 409.
 
