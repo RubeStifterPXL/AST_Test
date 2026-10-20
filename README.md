@@ -1,9 +1,9 @@
-# QAcademy API-tests - team 2 (samengevoegde uitwerking)
+# QAcademy API-tests - team 2
 
 Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy (team 2: `https://qacademyb.duckdns.org`).
 **17 testcases (5 scenario's), 129 requests, alle 34 user stories (US-01 t/m US-34) gedekt.**
 
-Deze versie combineert de eigen uitwerking (volledige dekking, 17 testcases + dekkingsblad) met de bevindingen van een collega die al tegen de server gedraaid heeft: account-activatie in de setup, een gerichte checkout-performancetest, de bugrapporten en een betere pipeline.
+Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy, gemaakt door team 2 (Gijs Colson, Flor Martens, Rube Stifter).
 
 ## Inhoud
 
@@ -14,7 +14,7 @@ postman/qacademy-team2.postman_collection.json
 postman/qacademy-team2.postman_environment.json
 testplan/Testplan_QAcademy_Team2.xlsx   Overzicht, Testplan, Stappen, Dekking, Testdata, Bugs, Prestatie
 bugs/BUG-01,02,03,04, PERF-01       bugrapporten (bevestigd met eigen run van 20/10/2026), BUG-000/PERF-000 = sjablonen
-LOGBOEK.md                           logboek (namen en uren nog invullen)
+LOGBOEK.md                           werkverdeling en tijdsregistratie per teamlid
 ```
 
 ## Testcase of request?
@@ -48,7 +48,7 @@ Extra mappen: `00 Setup` (S1-S6 accounts activeren en ID's opzoeken, S7 testdata
 2. Rechtsklik op de collectie > **Run collection** > volgorde laten staan > **Run**.
 3. Rode tests = kandidaat-bugs of aannames die niet kloppen (blad Testplan, kolom K).
 
-Verwacht na een run (19 van 445 tests rood, allemaal door SUT-bugs): BUG-01 (TC01.01, TC01.02, TC08.10, TC08.15), BUG-02 (TC13.05), BUG-03 (TC08.03), BUG-04 (TC05.02 plus 5 gevolgfouten in TC05) en PERF-01 (TC17.01). Andere rode tests zijn meestal een aanname of testfout: kijk eerst daar.
+Verwacht na een run (16 tot 22 van de 445 tests rood, allemaal door SUT-bugs): BUG-01 (TC01.01, TC01.02, TC08.10, TC08.15), BUG-02 (TC13.05), BUG-03 (TC08.03), BUG-04 (TC05.02 plus 5 gevolgfouten in TC05) en PERF-01 (TC17.01). Andere rode tests zijn meestal een aanname of testfout: kijk eerst daar.
 
 ## Newman lokaal en pipeline
 
@@ -65,13 +65,6 @@ GitHub: private repository, `custersnele` en teamgenoten als collaborator, daarn
 - Testdata per run (`run_id`), niets hardgecodeerd. Accounts, URLs, drempels en `date_suffix` staan in het environment.
 - Gelijkaardige negatieve gevallen zitten als lijst in 1 request; elke regel is een aparte test in het rapport.
 - `perf_threshold_ms` (3000) geldt voor elk request; TC17 toetst checkout strenger (`perf_checkout_max_ms` 500, `perf_spread_ms` 300).
-
-## Wat jij nog moet doen
-
-1. Run in Postman en nakijken welke tests rood zijn.
-2. Resultaat per testcase invullen (Pass/Fail, Bug-ID) in blad Testplan; blad Bugs en `bugs/` aanpassen aan jullie eigen run (bewijs van de collega vervangen).
-3. Blad Prestatie invullen met de checkout-tijden uit 3-4 pipeline-runs.
-4. LOGBOEK invullen, repo aanmaken en pipeline draaien.
 
 ## Probleemoplossing
 
