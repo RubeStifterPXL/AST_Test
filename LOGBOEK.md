@@ -53,7 +53,7 @@ Een eerste kandidaat-bug rond het verwijderen van een locatie in gebruik bleek e
 
 - `reset-test-data` wist ook data van teamgenoten, dus we spreken af wie wanneer test.
 - Testdata maken we per run zelf aan met een unieke `run_id`. Seed-cursussen wijzigen we niet.
-- Het aantal falende tests verschilt per run (19 tot 22) door de wisselende checkout-responstijd (PERF-01). De andere 16 fails zijn vast.
+- Het aantal falende tests verschilt per run (16 tot 22) door de wisselende checkout-responstijd (PERF-01). De andere 16 fails zijn vast.
 
 ## 6. Hulpmiddelen
 
