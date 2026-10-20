@@ -13,7 +13,7 @@ package.json, package-lock.json      Newman 6.2.3 + htmlextra (npm ci / npm test
 postman/qacademy-team2.postman_collection.json
 postman/qacademy-team2.postman_environment.json
 testplan/Testplan_QAcademy_Team2.xlsx   Overzicht, Testplan, Stappen, Dekking, Testdata, Bugs, Prestatie
-bugs/BUG-01,02,03,05, PERF-01       bugrapporten (bevestigd met eigen run van 20/10/2026), BUG-000/PERF-000 = sjablonen
+bugs/BUG-01,02,03,04, PERF-01       bugrapporten (bevestigd met eigen run van 20/10/2026), BUG-000/PERF-000 = sjablonen
 LOGBOEK.md                           logboek (namen en uren nog invullen)
 ```
 
@@ -48,7 +48,7 @@ Extra mappen: `00 Setup` (S1-S6 accounts activeren en ID's opzoeken, S7 testdata
 2. Rechtsklik op de collectie > **Run collection** > volgorde laten staan > **Run**.
 3. Rode tests = kandidaat-bugs of aannames die niet kloppen (blad Testplan, kolom K).
 
-Verwacht na een run (19 van 445 tests rood, allemaal door SUT-bugs): BUG-01 (TC01.01, TC01.02, TC08.10, TC08.15), BUG-02 (TC13.05), BUG-03 (TC08.03), BUG-05 (TC05.02 plus 5 gevolgfouten in TC05) en PERF-01 (TC17.01). Andere rode tests zijn meestal een aanname of testfout: kijk eerst daar.
+Verwacht na een run (19 van 445 tests rood, allemaal door SUT-bugs): BUG-01 (TC01.01, TC01.02, TC08.10, TC08.15), BUG-02 (TC13.05), BUG-03 (TC08.03), BUG-04 (TC05.02 plus 5 gevolgfouten in TC05) en PERF-01 (TC17.01). Andere rode tests zijn meestal een aanname of testfout: kijk eerst daar.
 
 ## Newman lokaal en pipeline
 
