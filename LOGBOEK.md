@@ -1,7 +1,7 @@
 # Logboek – QAcademy API-tests (team 2)
 
-**Team:** Gijs Colson, Flor Martens, Rube Stifter
-**Opdracht:** REST API van QAcademy testen met Postman, Newman en GitHub Actions
+**Team:** Gijs Colson, Flor Martens, Rube Stifter  
+**Opdracht:** REST API van QAcademy testen met Postman, Newman en GitHub Actions  
 **SUT:** https://qacademyb.duckdns.org (Keycloak: https://qacademy-auth.duckdns.org, realm `qacademy`)
 
 ## 1. Werkverdeling en tijd
