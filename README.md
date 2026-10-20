@@ -1,9 +1,7 @@
 # QAcademy API-tests - team 2
 
-Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy (team 2: `https://qacademyb.duckdns.org`).
+Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy (team 2: `https://qacademyb.duckdns.org`). Gemaakt door Gijs Colson, Flor Martens en Rube Stifter
 **17 testcases (5 scenario's), 129 requests, alle 34 user stories (US-01 t/m US-34) gedekt.**
-
-Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy, gemaakt door team 2 (Gijs Colson, Flor Martens, Rube Stifter).
 
 ## Inhoud
 
