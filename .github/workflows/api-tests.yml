@@ -3,6 +3,17 @@ name: API tests (Postman / Newman)
 # Alleen manueel te starten: tab Actions > "API tests (Postman / Newman)" > Run workflow
 on:
   workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Tegen welke server testen? (standaard: team 2)"
+        required: true
+        default: "https://qacademyb.duckdns.org"
+        type: string
+      keycloak_url:
+        description: "Keycloak-server (standaard: team 2)"
+        required: true
+        default: "https://qacademy-auth.duckdns.org"
+        type: string
 
 jobs:
   newman:
@@ -24,9 +35,14 @@ jobs:
 
       # Een rode stap omdat een test een bug vindt is normaal en gewenst.
       - name: Run Postman collection
+        env:
+          BASE_URL: ${{ inputs.base_url }}
+          KEYCLOAK_URL: ${{ inputs.keycloak_url }}
         run: >
           npx newman run postman/qacademy-team2.postman_collection.json
           --environment postman/qacademy-team2.postman_environment.json
+          --env-var "base_url=$BASE_URL"
+          --env-var "keycloak_url=$KEYCLOAK_URL"
           --reporters cli,htmlextra,junit,json
           --reporter-htmlextra-export reports/report.html
           --reporter-htmlextra-title "QAcademy team 2 - API tests"
@@ -37,13 +53,15 @@ jobs:
 
       - name: Write job summary
         if: always()
+        env:
+          BASE_URL: ${{ inputs.base_url }}
         run: |
           node -e '
             const fs = require("fs");
             if (!fs.existsSync("reports/newman.json")) { console.log("No Newman report found"); process.exit(0); }
             const run = require("./reports/newman.json").run;
             const a = run.stats.assertions, r = run.stats.requests;
-            let md = "## QAcademy API tests\n\n| Requests | Assertions | Failed assertions |\n|---|---|---|\n";
+            let md = "## QAcademy API tests\n\nServer: " + process.env.BASE_URL + "\n\n| Requests | Assertions | Failed assertions |\n|---|---|---|\n";
             md += `| ${r.total} | ${a.total} | ${a.failed} |\n\n`;
             if (run.failures.length) {
               md += "### Failed assertions\n\n| Request | Assertion |\n|---|---|\n";
