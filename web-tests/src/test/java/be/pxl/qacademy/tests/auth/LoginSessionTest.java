@@ -42,7 +42,8 @@ class LoginSessionTest extends BaseUiTest {
         new KeycloakLoginPage(page).loginAs(user.username(), user.password());
 
         new NavBar(page).waitUntilLoggedInAs(user.username());
-        assertThat(page).hasURL(Pattern.compile("^" + Pattern.quote(baseUrl())));
+        // geen Pattern.quote: \Q..\E bestaat niet in JavaScript-regex (Playwright evalueert in de browser)
+        assertThat(page).hasURL(Pattern.compile("^" + baseUrl().replace(".", "\\.") + "/"));
     }
 
     @Test
