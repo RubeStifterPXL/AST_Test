@@ -28,9 +28,6 @@ on:
         options:
           - "https://qacademyb.duckdns.org"
           - "https://qacademya.duckdns.org"
-  schedule:
-    # Elke nacht om 02:17 UTC, alle browsers
-    - cron: "17 2 * * *"
 
 # Nooit tegelijk met de API-tests of een andere web-run tegen dezelfde omgeving.
 concurrency:
@@ -50,7 +47,7 @@ jobs:
       - id: pick
         run: |
           choice="${{ inputs.browsers }}"
-          if [ "${{ github.event_name }}" = "schedule" ] || [ "$choice" = "all" ]; then
+          if [ "$choice" = "all" ]; then
             echo 'browsers=["chromium","firefox","webkit"]' >> "$GITHUB_OUTPUT"
           elif [ -n "$choice" ]; then
             echo "browsers=[\"$choice\"]" >> "$GITHUB_OUTPUT"
