@@ -29,7 +29,7 @@ Team: Gijs Colson, Flor Martens, Rube Stifter.
 | Suite | Vereisten | Commando |
 |---|---|---|
 | API | Node 20 | `cd api-tests && npm ci && QA_PASSWORD=... npm test` |
-| Web | Java 21, Maven 3.9 | `cd web-tests && cp .env.example .env` (QA_PASSWORD invullen), `mvn exec:java@install-browsers`, `mvn test` |
+| Web | JDK 21+ (Maven niet nodig: Maven Wrapper) | `cd web-tests && cp .env.example .env` (QA_PASSWORD invullen), `./mvnw exec:java@install-browsers`, `./mvnw test` (Windows: `mvnw ...`) |
 
 ## CI (GitHub Actions)
 

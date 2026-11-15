@@ -5,25 +5,29 @@ Java 21, Playwright 1.49, JUnit 5, AssertJ, PDFBox (certificaat-PDF lezen), Jack
 
 ## Snel starten
 
+Vereist: **JDK 21 of nieuwer** (`java -version`). Maven installeren hoeft niet: de Maven Wrapper (`mvnw`) in deze map downloadt de juiste Maven-versie (3.9.9) zelf.
+
 ```bash
 cd web-tests
-cp .env.example .env              # vul QA_PASSWORD in (staat in .gitignore)
-mvn exec:java@install-browsers    # eenmalig: Chromium + OS-afhankelijkheden
-mvn test                          # volledige suite, headless
+cp .env.example .env               # Windows: copy .env.example .env ; vul QA_PASSWORD in
+./mvnw exec:java@install-browsers  # eenmalig: Chromium + OS-afhankelijkheden
+./mvnw test                        # volledige suite, headless
 ```
+
+Windows (`cmd` of PowerShell): `mvnw` in plaats van `./mvnw`, bv. `mvnw test`. De voorbeelden hieronder gebruiken `./mvnw`.
 
 | Wat | Commando |
 |---|---|
-| Eén groep (JUnit-tag) | `mvn test -Dgroups=catalog` · `-Dgroups="student \| certificates"` · `-Dgroups=e2e` |
-| Eén user story | `mvn test -Dgroups=US-12` |
-| Eén klasse / methode | `mvn test -Dtest=CertificateTest` · `-Dtest=CertificateTest#downloadedPdfContainsAllDetails` |
-| Andere browser | `BROWSER=firefox mvn test` (eerst `mvn exec:java@install-browsers -Dbrowser.install=firefox`) |
-| Browser zichtbaar | `HEADLESS=false SLOW_MO_MS=300 mvn test -Dtest=LoginLogoutTest` |
-| Geen retry | `mvn test -Dretries=0` |
-| HTML-rapport | `mvn surefire-report:report-only site -DgenerateReports=false` → `target/reports/surefire.html` |
+| Eén groep (JUnit-tag) | `./mvnw test -Dgroups=catalog` · `"-Dgroups=student \| certificates"` · `-Dgroups=e2e` |
+| Eén user story | `./mvnw test -Dgroups=US-12` |
+| Eén klasse / methode | `./mvnw test -Dtest=CertificateTest` · `-Dtest=CertificateTest#downloadedPdfContainsAllDetails` |
+| Andere browser | `BROWSER=firefox ./mvnw test` (eerst `./mvnw exec:java@install-browsers -Dbrowser.install=firefox`) |
+| Browser zichtbaar | `HEADLESS=false SLOW_MO_MS=300 ./mvnw test -Dtest=LoginLogoutTest` |
+| Geen retry | `./mvnw test -Dretries=0` |
+| HTML-rapport | `./mvnw surefire-report:report-only site -DgenerateReports=false` → `target/reports/surefire.html` |
 | Trace bekijken | `npx playwright show-trace target/artifacts/traces/<test>.zip` of https://trace.playwright.dev |
 
-Windows PowerShell: `$env:BROWSER='firefox'; mvn test`.
+Omgevingsvariabelen zetten: PowerShell `$env:BROWSER='firefox'; mvnw test` · cmd `set BROWSER=firefox` en daarna `mvnw test`.
 
 ## Configuratie
 
@@ -122,6 +126,8 @@ Branch `experiment/mutation-check` verandert in 5 tests bewust de verwachte waar
 | Probleem | Oplossing |
 |---|---|
 | `QA_PASSWORD is niet gezet` | `web-tests/.env` aanmaken of de omgevingsvariabele zetten. |
+| `Token ophalen mislukt ... invalid_grant` | Wachtwoord in `.env` klopt niet (let op tikfouten zoals `1` in plaats van `!`). Controleer met `findstr QA_PASSWORD .env`. |
+| `./mvnw: Permission denied` (Linux/macOS) | `chmod +x mvnw`, of `sh ./mvnw ...` |
 | `Setup-request mislukt: ... HTTP 401` | Wachtwoord of Keycloak-URL fout; client `qacademy-test-tools` moet password grant toelaten. |
 | `Gebruiker ... niet gevonden` | Het account moet minstens één keer ingelogd hebben; `QAcademyApi.userId` doet dat zelf. |
 | Nav-links "niet zichtbaar" | Venster te smal: de navbar klapt in onder 992 px. De tests gebruiken 1440 x 900. |

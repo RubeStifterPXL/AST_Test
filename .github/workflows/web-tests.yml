@@ -43,7 +43,7 @@ permissions:
 jobs:
   plan:
     name: Plan browser matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       browsers: ${{ steps.pick.outputs.browsers }}
     steps:
@@ -61,7 +61,7 @@ jobs:
   test:
     name: ${{ matrix.browser }} / ${{ matrix.shard.name }}
     needs: plan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     strategy:
       fail-fast: false
@@ -84,7 +84,7 @@ jobs:
       HEADLESS: "true"
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check required secret
         run: |
@@ -94,31 +94,32 @@ jobs:
           fi
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
           cache-dependency-path: web-tests/pom.xml
 
+      # Zelfde commando als lokaal: de Maven Wrapper (mvnw) uit de repo
       - name: Compile tests
-        run: mvn -B -ntp test-compile
+        run: sh ./mvnw -B -ntp test-compile
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('web-tests/pom.xml') }}
 
       - name: Install ${{ matrix.browser }} and OS dependencies
-        run: mvn -B -ntp exec:java@install-browsers -Dbrowser.install=${{ matrix.browser }}
+        run: sh ./mvnw -B -ntp exec:java@install-browsers -Dbrowser.install=${{ matrix.browser }}
 
       - name: Run tests (${{ matrix.shard.groups }})
-        run: mvn -B -ntp surefire:test -Dretries=1 "-Dgroups=${{ matrix.shard.groups }}"
+        run: sh ./mvnw -B -ntp surefire:test -Dretries=1 "-Dgroups=${{ matrix.shard.groups }}"
 
       - name: Build HTML report
         if: always()
-        run: mvn -B -ntp -q surefire-report:report-only site:site -DgenerateReports=false || true
+        run: sh ./mvnw -B -ntp -q surefire-report:report-only site:site -DgenerateReports=false || true
 
       - name: Write job summary
         if: always()
@@ -126,7 +127,7 @@ jobs:
 
       - name: Publish HTML and JUnit report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: web-report-${{ matrix.browser }}-${{ matrix.shard.name }}-${{ github.run_number }}
           path: |
@@ -139,7 +140,7 @@ jobs:
 
       - name: Publish traces and screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: web-traces-${{ matrix.browser }}-${{ matrix.shard.name }}-${{ github.run_number }}
           path: web-tests/target/artifacts/
