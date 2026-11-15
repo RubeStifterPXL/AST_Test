@@ -67,7 +67,7 @@ class SubscribeTest extends BaseUiTest {
         MySubscriptionsPage mine = new MySubscriptionsPage(page).open();
         mine.payWithWallet(course.title());
 
-        assertThat(mine.message(course.title())).containsText("insufficient");
+        assertThat(mine.message(course.title())).hasText("Insufficient wallet balance");
         mine.open();
         assertThat(mine.status(course.title())).hasText("PENDING_PAYMENT");
     }

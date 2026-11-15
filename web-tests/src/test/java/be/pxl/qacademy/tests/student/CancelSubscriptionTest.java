@@ -45,6 +45,9 @@ class CancelSubscriptionTest extends BaseUiTest {
         api.subscribe(TestUser.STUDENT_1, course.id());
 
         MySubscriptionsPage mine = new MySubscriptionsPage(pageAs(TestUser.STUDENT_1)).open();
+        assertThat(mine.status(course.title())).hasText("PENDING_PAYMENT");
+        // US-06: elke status behalve CANCELLED kan geannuleerd worden, dus ook PENDING_PAYMENT
+        assertThat(mine.cancelButton(course.title())).isVisible();
         mine.cancel(course.title());
 
         assertThat(mine.status(course.title())).hasText("CANCELLED");

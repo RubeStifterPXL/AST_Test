@@ -49,8 +49,12 @@ public class AdminCourseEditPage extends BasePage {
         return this;
     }
 
+    /** Kiest de locatie op naam; het optielabel kan extra info bevatten (bv. de stad). */
     public AdminCourseEditPage location(String locationName) {
-        byTestId("course-location-select").selectOption(new SelectOption().setLabel(locationName));
+        Locator select = byTestId("course-location-select");
+        Locator option = select.locator("option").filter(new Locator.FilterOptions().setHasText(locationName)).first();
+        assertThat(option).hasCount(1);
+        select.selectOption(new SelectOption().setLabel(option.innerText().trim()));
         return this;
     }
 
