@@ -15,8 +15,8 @@ Team: Gijs Colson, Flor Martens, Rube Stifter.
 .
 ├── README.md                     dit overzicht
 ├── .github/workflows/
-│   ├── api-tests.yml             Newman, push/PR op api-tests/** + manueel
-│   └── web-tests.yml             Playwright, push/PR op web-tests/** + manueel + nachtelijk
+│   ├── api-tests.yml             Newman, push op main/PR op api-tests/** + manueel
+│   └── web-tests.yml             Playwright, push op main/PR op web-tests/** + manueel
 ├── api-tests/                    PE1: Postman-collectie, testplan, logboek (Node/Newman)   -> api-tests/README.md
 ├── web-tests/                    PE2: Playwright for Java (Maven)                          -> web-tests/README.md
 └── bug-reports/                  één bestand per bug, API én web                           -> bug-reports/README.md
@@ -35,7 +35,7 @@ Team: Gijs Colson, Flor Martens, Rube Stifter.
 
 | | API tests | Web tests |
 |---|---|---|
-| Triggers | push op `main` en PR die `api-tests/**` wijzigt, *Run workflow* | push op `main` en PR die `web-tests/**` wijzigt, *Run workflow* (browser + server kiezen), elke nacht 02:17 UTC (alle browsers) |
+| Triggers | push op `main` en PR die `api-tests/**` wijzigt, *Run workflow* | push op `main` en PR die `web-tests/**` wijzigt, *Run workflow* (browser + server kiezen; `all` = Chromium, Firefox en WebKit) |
 | Parallel | 1 job | browser-matrix (Chromium, Firefox, WebKit) x 3 shards per JUnit-tag |
 | Retries | - | max 1 (`-Dretries=1`); een test die pas na een retry slaagt staat als **flaky** in de samenvatting |
 | Faalt bij | falende assertie | falende test (`mvn` exit code) |
