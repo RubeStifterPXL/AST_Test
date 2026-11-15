@@ -1,3 +1,24 @@
-reports/
+# Build output
+target/
 node_modules/
+
+# Rapporten, traces, screenshots, downloads
+reports/
+test-results/
+playwright-report/
+traces/
+screenshots/
+*.zip
+
+# Lokale geheimen en ingelogde sessies (bevatten tokens)
+.env
+.env.*
+!.env.example
+.auth/
+
+# IDE en OS
+.idea/
+*.iml
+.vscode/
 .DS_Store
+Thumbs.db

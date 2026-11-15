@@ -1,75 +1,64 @@
-# QAcademy API-tests - team 2
+# QAcademy Test Automation Suite - team 2
 
-Postman-collectie, testplan, bugrapporten en CI-pipeline voor de REST API van QAcademy (team 2: `https://qacademyb.duckdns.org`). Gemaakt door Gijs Colson, Flor Martens en Rube Stifter.  
-**17 testcases (5 scenario's), 129 requests, alle 34 user stories (US-01 t/m US-34) gedekt.**
+[![API tests](https://github.com/RubeStifterPXL/AST_Test/actions/workflows/api-tests.yml/badge.svg)](https://github.com/RubeStifterPXL/AST_Test/actions/workflows/api-tests.yml)
+[![Web tests](https://github.com/RubeStifterPXL/AST_Test/actions/workflows/web-tests.yml/badge.svg)](https://github.com/RubeStifterPXL/AST_Test/actions/workflows/web-tests.yml)
+
+Volledige testautomatisatie (TAS) voor **QAcademy**, het cursusplatform van team 2 (`https://qacademyb.duckdns.org`):
+Angular-frontend, Spring Boot REST API, PostgreSQL en Keycloak.
+Team: Gijs Colson, Flor Martens, Rube Stifter.
+
+> Een rode badge betekent hier niet "kapotte tests": elke rode test wijst op een gedocumenteerde bug in de SUT (zie [bug-reports/](bug-reports/)).
 
 ## Inhoud
 
 ```
-.github/workflows/api-tests.yml      pipeline (manueel starten, Newman, rapport + samenvatting)
-package.json, package-lock.json      Newman 6.2.3 + htmlextra (npm ci / npm test)
-postman/qacademy-team2.postman_collection.json
-postman/qacademy-team2.postman_environment.json
-testplan/Testplan_QAcademy_Team2.xlsx   Overzicht, Testplan, Stappen, Dekking, Testdata, Bugs, Prestatie
-bugs/BUG-01,02,03,04, PERF-01       bugrapporten (bevestigd met eigen run van 20/10/2026), BUG-000/PERF-000 = sjablonen
-LOGBOEK.md                           werkverdeling en tijdsregistratie per teamlid
+.
+├── README.md                     dit overzicht
+├── .github/workflows/
+│   ├── api-tests.yml             Newman, push/PR op api-tests/** + manueel
+│   └── web-tests.yml             Playwright, push/PR op web-tests/** + manueel + nachtelijk
+├── api-tests/                    PE1: Postman-collectie, testplan, logboek (Node/Newman)   -> api-tests/README.md
+├── web-tests/                    PE2: Playwright for Java (Maven)                          -> web-tests/README.md
+└── bug-reports/                  één bestand per bug, API én web                           -> bug-reports/README.md
 ```
 
-## Testcase of request?
+`api-tests/` en `web-tests/` zijn onafhankelijke projecten (eigen build-bestand, eigen afhankelijkheden, eigen pipeline). Een trage browsertest blokkeert de API-tests niet.
 
-- **Testcase** = een doel (blad *Testplan*, TC01-TC17) = een **map** in Postman.
-- **Request** = een HTTP-call in die map (blad *Stappen*, ID `TC05.03`), met meerdere asserties.
-- Blad *Dekking*: per user story welke testcases ze testen (34 van 34).
+## Lokaal draaien
 
-| TC | Onderwerp | Type |
+| Suite | Vereisten | Commando |
 |---|---|---|
-| 01-02 | Publieke catalogus: filteren, paginering, sortering, ongeldige invoer | enkel |
-| 03 | Publiek detail en curriculum | enkel |
-| 04 | Authenticatie en autorisatie (401/403) | enkel |
-| 05 | Locatiebeheer | **scenario** |
-| 06 | Cursus aanmaken en lezen | enkel |
-| 07 | Modules | enkel |
-| 08 | Cursus-levenscyclus | **scenario** |
-| 09-11 | Inschrijven, betalen, annuleren (bouwen op elkaar voort) | enkel |
-| 12 | Capaciteit: HARD_CAP en onbetaalde plaatsen | **scenario** |
-| 13 | Wachtlijst en doorschuiven | **scenario** |
-| 14 | Aanwezigheden | enkel |
-| 15 | Examenresultaten | enkel |
-| 16 | Gebruikersbeheer incl. in/uitschakelen en inloggen | **scenario** |
-| 17 | Performance: checkout 5x gemeten | enkel (niet-functioneel) |
+| API | Node 20 | `cd api-tests && npm ci && QA_PASSWORD=... npm test` |
+| Web | Java 21, Maven 3.9 | `cd web-tests && cp .env.example .env` (QA_PASSWORD invullen), `mvn exec:java@install-browsers`, `mvn test` |
 
-Extra mappen: `00 Setup` (S1-S6 accounts activeren en ID's opzoeken, S7 testdata) en `99 Opruimen` (C1).
+## CI (GitHub Actions)
 
-## Draaien in Postman
+| | API tests | Web tests |
+|---|---|---|
+| Triggers | push op `main` en PR die `api-tests/**` wijzigt, *Run workflow* | push op `main` en PR die `web-tests/**` wijzigt, *Run workflow* (browser + server kiezen), elke nacht 02:17 UTC (alle browsers) |
+| Parallel | 1 job | browser-matrix (Chromium, Firefox, WebKit) x 3 shards per JUnit-tag |
+| Retries | - | max 1 (`-Dretries=1`); een test die pas na een retry slaagt staat als **flaky** in de samenvatting |
+| Faalt bij | falende assertie | falende test (`mvn` exit code) |
+| Rapport (altijd) | `newman-report-<nr>`: HTML, JUnit, JSON | `web-report-<browser>-<shard>-<nr>`: HTML (surefire), JUnit-XML; `web-traces-...`: Playwright-traces + screenshots van gefaalde tests |
+| Samenvatting | tabel per run in de job summary | tabel per job: totalen, gefaalde tests, flaky tests |
 
-1. Import beide `.json`-bestanden uit `postman/`, kies het environment **QAcademy team 2**.
-2. Rechtsklik op de collectie > **Run collection** > volgorde laten staan > **Run**.
-3. Rode tests = kandidaat-bugs of aannames die niet kloppen (blad Testplan, kolom K).
+Beide workflows delen de concurrency-groep `qacademy-environment`: ze draaien nooit tegelijk tegen dezelfde omgeving (de API-suite reset aan het einde de testdata van het team).
 
-Verwacht na een run (16 tot 22 van de 445 tests rood, allemaal door SUT-bugs): BUG-01 (TC01.01, TC01.02, TC08.10, TC08.15), BUG-02 (TC13.05), BUG-03 (TC08.03), BUG-04 (TC05.02 plus 5 gevolgfouten in TC05) en PERF-01 (TC17.01). Andere rode tests zijn meestal een aanname of testfout: kijk eerst daar.
+### Geheimen en variabelen
 
-## Newman lokaal en pipeline
+Geen wachtwoorden, tokens of IP's in de repository. Instellen in *Settings → Secrets and variables → Actions*:
 
-```bash
-npm ci
-npm test            # rapport in reports/report.html
-```
+| Naam | Soort | Verplicht | Waarde |
+|---|---|---|---|
+| `QA_PASSWORD` | secret | ja | wachtwoord van de testgebruikers |
+| `QA_BASE_URL` | variable | nee | standaard `https://qacademyb.duckdns.org` |
+| `QA_KEYCLOAK_URL` | variable | nee | standaard `https://qacademy-auth.duckdns.org` |
 
-GitHub: private repository, `custersnele` en teamgenoten als collaborator, daarna Actions > **API tests (Postman / Newman)** > Run workflow. Artifact `newman-report-<nr>` bevat het HTML-rapport (ook bij een rode build).
+`.gitignore` sluit `target/`, `node_modules/`, rapporten, traces, screenshots, `.auth/` en `.env` uit.
 
-## Onderhoudbaarheid
+## Werkwijze
 
-- Tokens per rol via de header `X-Role` (collection pre-request, automatisch vernieuwd).
-- Testdata per run (`run_id`), niets hardgecodeerd. Accounts, URLs, drempels en `date_suffix` staan in het environment.
-- Gelijkaardige negatieve gevallen zitten als lijst in 1 request; elke regel is een aparte test in het rapport.
-- `perf_threshold_ms` (3000) geldt voor elk request; TC17 toetst checkout strenger (`perf_checkout_max_ms` 500, `perf_spread_ms` 300).
-
-## Probleemoplossing
-
-| Probleem | Oplossing |
-|---|---|
-| S1-S5 falen met 401 | Token ophalen mislukt: Postman Console openen, `keycloak_url` en `password` controleren. |
-| S6: "Gebruiker ... gevonden" faalt | E-mailadres bevat de username niet; bekijk `GET /api/admin/users` en pas de zoekregel in S6 aan. |
-| S7 faalt met 400 op datums | Zet `date_suffix` in het environment op een lege waarde. |
-| Veel tests falen na een fout in S7 of TC09 | Normaal: afhankelijke tests. Los de eerste fout op. |
-| Teamgenoot test tegelijk | Afspreken: C1 (reset-test-data) wist ook hun inschrijvingen. |
+- Werk op een feature-branch en open een pull request naar `main`; merge enkel met groene pipeline (of met rode tests die enkel gedocumenteerde SUT-bugs zijn).
+  Aanbevolen: *Settings → Branches → Add rule* op `main` met "Require a pull request" en "Require status checks to pass".
+- Elke testklasse draagt `@Author`; commit je eigen tests vanuit je eigen GitHub-account.
+- Nieuwe bug: kopieer het sjabloon in `bug-reports/web/` of `bug-reports/api/` en voeg een rij toe in `bug-reports/README.md`.

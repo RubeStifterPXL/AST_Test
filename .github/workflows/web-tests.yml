@@ -1,0 +1,147 @@
+name: Web tests (Playwright)
+
+on:
+  # push enkel op main; feature-branches lopen via de pull request (geen dubbele runs)
+  push:
+    branches: [main]
+    paths:
+      - "web-tests/**"
+      - ".github/workflows/web-tests.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "web-tests/**"
+      - ".github/workflows/web-tests.yml"
+  workflow_dispatch:
+    inputs:
+      browsers:
+        description: "Browser(s)"
+        required: true
+        default: "chromium"
+        type: choice
+        options: [chromium, firefox, webkit, all]
+      base_url:
+        description: "Tegen welke server testen? (standaard: team 2)"
+        required: true
+        default: "https://qacademyb.duckdns.org"
+        type: choice
+        options:
+          - "https://qacademyb.duckdns.org"
+          - "https://qacademya.duckdns.org"
+  schedule:
+    # Elke nacht om 02:17 UTC, alle browsers
+    - cron: "17 2 * * *"
+
+# Nooit tegelijk met de API-tests of een andere web-run tegen dezelfde omgeving.
+concurrency:
+  group: qacademy-environment
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Plan browser matrix
+    runs-on: ubuntu-latest
+    outputs:
+      browsers: ${{ steps.pick.outputs.browsers }}
+    steps:
+      - id: pick
+        run: |
+          choice="${{ inputs.browsers }}"
+          if [ "${{ github.event_name }}" = "schedule" ] || [ "$choice" = "all" ]; then
+            echo 'browsers=["chromium","firefox","webkit"]' >> "$GITHUB_OUTPUT"
+          elif [ -n "$choice" ]; then
+            echo "browsers=[\"$choice\"]" >> "$GITHUB_OUTPUT"
+          else
+            echo 'browsers=["chromium"]' >> "$GITHUB_OUTPUT"
+          fi
+
+  test:
+    name: ${{ matrix.browser }} / ${{ matrix.shard.name }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ fromJSON(needs.plan.outputs.browsers) }}
+        # Shards op basis van JUnit-tags: elke shard is een aparte JVM met een eigen run-id,
+        # eigen cursussen en eigen sessies, dus ze storen elkaar niet.
+        shard:
+          - { name: "catalog-auth-admin", groups: "catalog | auth | admin" }
+          - { name: "student-certificates", groups: "student | certificates" }
+          - { name: "instructor-e2e", groups: "instructor | e2e" }
+    defaults:
+      run:
+        working-directory: web-tests
+    env:
+      BASE_URL: ${{ inputs.base_url || vars.QA_BASE_URL || 'https://qacademyb.duckdns.org' }}
+      KEYCLOAK_URL: ${{ vars.QA_KEYCLOAK_URL || 'https://qacademy-auth.duckdns.org' }}
+      QA_PASSWORD: ${{ secrets.QA_PASSWORD }}
+      BROWSER: ${{ matrix.browser }}
+      HEADLESS: "true"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check required secret
+        run: |
+          if [ -z "$QA_PASSWORD" ]; then
+            echo "::error::Repository secret QA_PASSWORD is not set (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: web-tests/pom.xml
+
+      - name: Compile tests
+        run: mvn -B -ntp test-compile
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('web-tests/pom.xml') }}
+
+      - name: Install ${{ matrix.browser }} and OS dependencies
+        run: mvn -B -ntp exec:java@install-browsers -Dbrowser.install=${{ matrix.browser }}
+
+      - name: Run tests (${{ matrix.shard.groups }})
+        run: mvn -B -ntp surefire:test -Dretries=1 "-Dgroups=${{ matrix.shard.groups }}"
+
+      - name: Build HTML report
+        if: always()
+        run: mvn -B -ntp -q surefire-report:report-only site:site -DgenerateReports=false || true
+
+      - name: Write job summary
+        if: always()
+        run: python3 ci/summary.py target/surefire-reports "${{ matrix.browser }} / ${{ matrix.shard.name }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish HTML and JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-report-${{ matrix.browser }}-${{ matrix.shard.name }}-${{ github.run_number }}
+          path: |
+            web-tests/target/reports/
+            web-tests/target/site/
+            web-tests/target/surefire-reports/*.xml
+            web-tests/target/surefire-reports/*.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish traces and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-traces-${{ matrix.browser }}-${{ matrix.shard.name }}-${{ github.run_number }}
+          path: web-tests/target/artifacts/
+          if-no-files-found: ignore
+          retention-days: 14
