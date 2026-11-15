@@ -97,7 +97,9 @@ public class AdminCourseEditPage extends BasePage {
         byTestId("cancel-course-button").click();
     }
 
+    /** De app vraagt een bevestiging via window.confirm: die wordt hier bewust aanvaard. */
     public void deleteCourse() {
+        page.onceDialog(dialog -> dialog.accept());
         byTestId("delete-course-button").click();
     }
 
@@ -133,7 +135,9 @@ public class AdminCourseEditPage extends BasePage {
         byTestId("save-module-button").click();
     }
 
+    /** Ook hier een window.confirm ("Delete module ...?"). */
     public void deleteModule(String title) {
+        page.onceDialog(dialog -> dialog.accept());
         moduleRow(title).locator("[data-testid^='delete-module-button-']").click();
     }
 
