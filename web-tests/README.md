@@ -70,26 +70,33 @@ src/test/java/be/pxl/qacademy/
 
 ## User stories en tests
 
-Elke testklasse heeft `@Tag("US-xx")`, een `@Tag` per epic en `@Author`. Het team verdeelt de klassen: vervang `Authors.TO_ASSIGN` door je naam en commit dat **vanuit je eigen account**, zodat de git-historiek en de annotatie hetzelfde zeggen.
+Elke testklasse heeft `@Tag("US-xx")`, een `@Tag` per epic en `@Author`. Zeven stories hebben een tweede testklasse met een andere aanpak (andere invalshoek, techniek of randgevallen), zodat er 24 klasse-story-combinaties zijn: genoeg voor 3 x 8 eigen stories (overlap is toegelaten zolang elk zijn eigen test schrijft). Het team verdeelt de klassen: vervang `Authors.TO_ASSIGN` door je naam en commit dat **vanuit je eigen account**, zodat de git-historiek en de annotatie hetzelfde zeggen.
 
 | US | Story | Testklasse | Tests | Auteur |
 |---|---|---|---|---|
 | US-01 | Gepubliceerde cursussen bekijken | `catalog/CatalogBrowseTest` | 6 | |
 | US-02 | Filteren (zoekterm, prijs, gratis, leeftijd, upcoming, combinaties, grenswaarden) | `catalog/CatalogFilterTest` | 16 | |
+| US-02 | Filteren: grenswaarden rond 100 EUR en orakel UI = API (2e aanpak) | `catalog/CatalogFilterConsistencyTest` | 13 | |
 | US-03 | Bladeren door de pagina's | `catalog/CatalogPaginationTest` | 5 | |
 | US-04 | Cursusdetail met modules | `catalog/CourseDetailTest` | 7 | |
 | US-05 | Inloggen en uitloggen (geldig/ongeldig) | `auth/LoginLogoutTest` | 4 | |
+| US-05 | Sessiegedrag: elke rol, deep link na login, echt uitgelogd (2e aanpak) | `auth/LoginSessionTest` | 9 | |
 | US-06 | Student: geen admin/instructor-toegang (ook rechtstreekse URL's) | `auth/StudentAuthorizationTest` | 12 | |
+| US-06 | Rollenmatrix: exact de toegelaten navigatielinks per rol (2e aanpak) | `auth/RoleNavigationMatrixTest` | 7 | |
 | US-07 | Instructor: geen admin-toegang | `auth/InstructorAuthorizationTest` | 8 | |
 | US-08 | Inschrijven: gratis en betaald (+ betalen) | `student/SubscribeTest` | 5 | |
+| US-08 | Inschrijven als gebruikersreis, zonder rechtstreekse URL's (2e aanpak) | `student/SubscribeJourneyTest` | 4 | |
 | US-09 | Eigen inschrijvingen, aanwezigheden, resultaten | `student/MyOverviewTest` | 5 | |
 | US-10 | Volle cursus: HARD_CAP en WAITLIST | `student/CapacityTest` | 4 | |
+| US-10 | Capaciteit in volgorde (max-1, max, max+1) en vrijgekomen plaats, alles via UI (2e aanpak) | `student/CapacityBoundaryTest` | 4 | |
 | US-11 | Annuleren en doorschuiven wachtlijst | `student/CancelSubscriptionTest` | 5 | |
 | US-12 | Certificaat bekijken en PDF downloaden | `certificates/CertificateTest` | 6 | |
+| US-12 | Certificaatregels: 'geslaagd' beslist, uniek nummer, eigen PDF (2e aanpak) | `certificates/CertificateRulesTest` | 4 | |
 | US-13 | My courses: enkel toegewezen cursussen | `instructor/MyCoursesTest` | 4 | |
 | US-14 | Inschrijvingen zonder e-mailadressen | `instructor/InstructorEnrollmentsTest` | 4 | |
 | US-15 | Aanwezigheid en resultaten, enkel eigen cursus | `instructor/InstructorAttendanceAndResultsTest` | 7 | |
 | US-16 | Cursussen en modules beheren | `admin/AdminCourseManagementTest` | 9 | |
+| US-16 | Effect van admin-acties op de publieke catalogus (2e aanpak) | `admin/AdminCourseLifecycleTest` | 4 | |
 | US-17 | Locaties en gebruikers beheren | `admin/AdminLocationTest`, `admin/AdminUserTest` | 5 + 7 | |
 | E2E | Levenscyclus cursus (2 modules, max 2, inschrijven, aanwezigheid, resultaat, certificaat) | `e2e/CourseLifecycleE2ETest` | 1 (7 stappen) | Team |
 
