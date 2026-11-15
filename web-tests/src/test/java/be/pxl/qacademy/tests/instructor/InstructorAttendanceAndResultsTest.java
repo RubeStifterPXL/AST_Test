@@ -38,7 +38,7 @@ class InstructorAttendanceAndResultsTest extends BaseUiTest {
 
         assertThat(attendance.saveMessage()).hasText("Attendance saved.");
         MyAttendancePage studentView = new MyAttendancePage(pageAs(TestUser.STUDENT_1)).open();
-        assertThat(studentView.row(course.title())).containsText("PRESENT");
+        assertThat(studentView.row(course.title())).containsText("ABSENT"); // MUTATIE
     }
 
     @Test

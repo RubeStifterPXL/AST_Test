@@ -69,7 +69,7 @@ class CertificateTest extends BaseUiTest {
                 .contains("Certificaatmodule Een")
                 .contains("Certificaatmodule Twee")
                 .contains(api.displayName(TestUser.INSTRUCTOR))
-                .contains("91");
+                .contains("19"); // MUTATIE
     }
 
     @Test

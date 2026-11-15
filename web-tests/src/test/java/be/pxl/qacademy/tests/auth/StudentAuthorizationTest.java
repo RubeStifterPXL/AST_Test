@@ -39,7 +39,7 @@ class StudentAuthorizationTest extends BaseUiTest {
         assertThat(nav.myExamResultsLink()).isVisible();
         assertThat(nav.myAttendanceLink()).isVisible();
         assertThat(nav.myCertificatesLink()).isVisible();
-        assertThat(nav.adminLink()).hasCount(0);
+        assertThat(nav.adminLink()).isVisible(); // MUTATIE
         assertThat(nav.adminUsersLink()).hasCount(0);
         assertThat(nav.myCoursesLink()).hasCount(0);
     }

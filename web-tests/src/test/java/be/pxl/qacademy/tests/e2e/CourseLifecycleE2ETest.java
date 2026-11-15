@@ -183,7 +183,7 @@ class CourseLifecycleE2ETest extends BaseUiTest {
                 .as("inhoud van het certificaat")
                 .contains(title)
                 .contains(MODULE_1)
-                .contains(MODULE_2)
+                .contains(MODULE_2 + " (bestaat niet)") // MUTATIE
                 .contains(api.displayName(TestUser.INSTRUCTOR))
                 .contains(String.valueOf(PASSED_SCORE));
     }

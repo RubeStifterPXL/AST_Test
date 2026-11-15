@@ -75,7 +75,7 @@ class CatalogFilterTest extends BaseUiTest {
         CatalogPage catalog = catalog().freeOnly(true);
         catalog.apply();
 
-        Assertions.assertThat(catalog.visibleTitles()).containsExactly(freeForAll.title());
+        Assertions.assertThat(catalog.visibleTitles()).containsExactly(cheapAdults.title()); // MUTATIE
     }
 
     @Test
