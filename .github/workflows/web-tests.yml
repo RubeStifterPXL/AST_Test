@@ -1,7 +1,9 @@
 name: Web tests (Playwright)
 
 on:
+  # push enkel op main; feature-branches lopen via de pull request (geen dubbele runs)
   push:
+    branches: [main]
     paths:
       - "web-tests/**"
       - ".github/workflows/web-tests.yml"

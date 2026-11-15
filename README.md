@@ -35,7 +35,7 @@ Team: Gijs Colson, Flor Martens, Rube Stifter.
 
 | | API tests | Web tests |
 |---|---|---|
-| Triggers | push/PR die `api-tests/**` wijzigt, *Run workflow* | push/PR die `web-tests/**` wijzigt, *Run workflow* (browser + server kiezen), elke nacht 02:17 UTC (alle browsers) |
+| Triggers | push op `main` en PR die `api-tests/**` wijzigt, *Run workflow* | push op `main` en PR die `web-tests/**` wijzigt, *Run workflow* (browser + server kiezen), elke nacht 02:17 UTC (alle browsers) |
 | Parallel | 1 job | browser-matrix (Chromium, Firefox, WebKit) x 3 shards per JUnit-tag |
 | Retries | - | max 1 (`-Dretries=1`); een test die pas na een retry slaagt staat als **flaky** in de samenvatting |
 | Faalt bij | falende assertie | falende test (`mvn` exit code) |

@@ -1,7 +1,9 @@
 name: API tests (Postman / Newman)
 
 on:
+  # push enkel op main; feature-branches lopen via de pull request (geen dubbele runs)
   push:
+    branches: [main]
     paths:
       - "api-tests/**"
       - ".github/workflows/api-tests.yml"
