@@ -16,7 +16,7 @@ public class AdminHomePage extends BasePage {
     }
 
     public AdminHomePage open() {
-        open("/admin");
+        navigateTo("/admin");
         assertThat(pageRoot()).isVisible();
         return this;
     }

@@ -13,7 +13,7 @@ public class MyAttendancePage extends BasePage {
     }
 
     public MyAttendancePage open() {
-        open("/my-attendance");
+        navigateTo("/my-attendance");
         assertThat(byTestId("my-attendance-page")).isVisible();
         waitUntilLoaded();
         return this;

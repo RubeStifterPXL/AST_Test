@@ -14,7 +14,7 @@ public class AdminCoursesPage extends BasePage {
     }
 
     public AdminCoursesPage open() {
-        open("/admin/courses");
+        navigateTo("/admin/courses");
         return waitUntilShown();
     }
 

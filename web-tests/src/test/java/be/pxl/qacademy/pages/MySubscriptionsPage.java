@@ -13,7 +13,7 @@ public class MySubscriptionsPage extends BasePage {
     }
 
     public MySubscriptionsPage open() {
-        open("/my-subscriptions");
+        navigateTo("/my-subscriptions");
         assertThat(byTestId("my-subscriptions-page")).isVisible();
         waitUntilLoaded();
         return this;

@@ -18,7 +18,7 @@ public class MyCertificatesPage extends BasePage {
     }
 
     public MyCertificatesPage open() {
-        open("/my-certificates");
+        navigateTo("/my-certificates");
         assertThat(byTestId("my-certificates-page")).isVisible();
         waitUntilLoaded();
         return this;

@@ -19,7 +19,7 @@ public class AdminCourseEditPage extends BasePage {
     }
 
     public AdminCourseEditPage open(String courseId) {
-        open("/admin/courses/" + courseId + "/edit");
+        navigateTo("/admin/courses/" + courseId + "/edit");
         return waitUntilShown();
     }
 

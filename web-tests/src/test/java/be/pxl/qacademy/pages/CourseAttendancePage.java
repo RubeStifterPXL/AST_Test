@@ -14,7 +14,7 @@ public class CourseAttendancePage extends BasePage {
     }
 
     public CourseAttendancePage open(String courseId) {
-        open("/courses/" + courseId + "/attendance");
+        navigateTo("/courses/" + courseId + "/attendance");
         return waitUntilShown();
     }
 

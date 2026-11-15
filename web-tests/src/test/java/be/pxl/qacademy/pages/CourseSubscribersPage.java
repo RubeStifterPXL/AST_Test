@@ -13,7 +13,7 @@ public class CourseSubscribersPage extends BasePage {
     }
 
     public CourseSubscribersPage open(String courseId) {
-        open("/courses/" + courseId + "/subscribers");
+        navigateTo("/courses/" + courseId + "/subscribers");
         return waitUntilShown();
     }
 

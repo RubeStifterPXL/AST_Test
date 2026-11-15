@@ -31,7 +31,7 @@ public abstract class BasePage {
         return page.locator("[data-testid^='" + prefix + "']");
     }
 
-    protected void open(String path) {
+    protected void navigateTo(String path) {
         page.navigate(Config.baseUrl() + path);
     }
 

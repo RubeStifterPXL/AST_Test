@@ -16,7 +16,7 @@ public class AdminUsersPage extends BasePage {
     }
 
     public AdminUsersPage open() {
-        open("/admin/users");
+        navigateTo("/admin/users");
         return waitUntilShown();
     }
 

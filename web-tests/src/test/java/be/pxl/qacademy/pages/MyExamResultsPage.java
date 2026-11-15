@@ -13,7 +13,7 @@ public class MyExamResultsPage extends BasePage {
     }
 
     public MyExamResultsPage open() {
-        open("/my-exam-results");
+        navigateTo("/my-exam-results");
         assertThat(byTestId("my-exam-results-page")).isVisible();
         waitUntilLoaded();
         return this;

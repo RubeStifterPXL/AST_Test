@@ -14,7 +14,7 @@ public class CourseExamResultsPage extends BasePage {
     }
 
     public CourseExamResultsPage open(String courseId) {
-        open("/courses/" + courseId + "/exam-results");
+        navigateTo("/courses/" + courseId + "/exam-results");
         return waitUntilShown();
     }
 

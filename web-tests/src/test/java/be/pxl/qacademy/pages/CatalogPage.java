@@ -16,7 +16,7 @@ public class CatalogPage extends BasePage {
     }
 
     public CatalogPage open() {
-        page.waitForResponse(this::isCatalogCall, () -> open("/"));
+        page.waitForResponse(this::isCatalogCall, () -> navigateTo("/"));
         assertThat(byTestId("course-list-page")).isVisible();
         waitUntilLoaded();
         return this;

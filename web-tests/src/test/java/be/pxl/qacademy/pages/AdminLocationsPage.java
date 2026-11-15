@@ -13,7 +13,7 @@ public class AdminLocationsPage extends BasePage {
     }
 
     public AdminLocationsPage open() {
-        open("/admin/locations");
+        navigateTo("/admin/locations");
         return waitUntilShown();
     }
 
